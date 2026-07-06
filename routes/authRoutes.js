@@ -9,10 +9,23 @@ const{
 router.post("/signup",signupValidation,authController.signup);
 
 router.post("/login",loginValidation,authController.login);
-router.get("/profile/:id",authController.getProfile);
-router.put("/profile/:id",authController.updateProfile);
-router.put("/change-password/:id",authController.changePassword);
+router.get(
+    "/profile/:id",
+    verifyToken,
+    authController.getProfile
+);
 
+router.put(
+    "/profile/:id",
+    verifyToken,
+    authController.updateProfile
+);
+
+router.put(
+    "/change-password/:id",
+    verifyToken,
+    authController.changePassword
+);
 
 router.get("/test",verifyToken,(req,res)=>
 {
