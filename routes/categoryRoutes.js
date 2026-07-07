@@ -13,7 +13,7 @@ router.post("/",
 
 router.get("/",verifyToken,categoryController.getAllCategories);
 
-router.get("/:id",verifyToken,categoryController.updateCategory);
+router.get("/:id",verifyToken,categoryController.getCategoryById);
 router.put(
     "/:id",
     verifyToken,

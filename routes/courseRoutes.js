@@ -12,7 +12,7 @@
   
   router.get("/",verifyToken,courseController.getAllCourses);
   
-  router.get("/:id",verifyToken,courseController.updateCourse);
+ router.get("/:id", verifyToken, courseController.getCourseById);
   router.put(
       "/:id",
       verifyToken,

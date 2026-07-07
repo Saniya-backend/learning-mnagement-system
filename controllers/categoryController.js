@@ -3,7 +3,7 @@ const db=require("../config/db");
 exports.createCategory=(req,res)=>
 {
     const{category_name,description}=req.body;
-    db.query("INSERT INTO categories(category,description)VALUES(?,?)",[category_name,description],
+    db.query("INSERT INTO categories(category_name,description)VALUES(?,?)",[category_name,description],
         (err,result)=>{
             if(err){
                 return res.status(500).json({
@@ -29,23 +29,7 @@ exports.getAllCategories=(req,res)=>{
         }
     );
 };
-exports.getCategoryById=(req,res)=>
-{
-    const{id}=req.params;
-    db.query("select * FROM categories where category_id=?",
-        [id],
-        (err,result)=>{
-            if(err){
-                return res.status(500).json({
-                    message:err.message
-                });
-            }
-            return res.status(201).json
 
-            (result);
-        }
-    );
-};
 
 exports.getCategoryById=(req,res)=>{
     const{id}=req.params;
@@ -72,8 +56,9 @@ exports.updateCategory=(req,res)=>{
     const{id}=req.params;
     const{category_name,description}=req.body;
 
-    db.query("UPDATE categories SET category_name=?,description=? WHERE category_id=?",
-        [id],
+    db.query(
+    "UPDATE categories SET category_name=?, description=? WHERE category_id=?",
+    [category_name, description, id],
         (err,result)=>
         {
             if(err){
