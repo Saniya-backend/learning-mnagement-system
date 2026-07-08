@@ -26,6 +26,9 @@ router.put(
     verifyToken,
     authController.changePassword
 );
+router.post("/logout", verifyToken, authController.logout);
+
+
 
 router.get("/test",verifyToken,(req,res)=>
 {

@@ -3,6 +3,23 @@
  exports.createOrganization=(req,res)=>
  {
     const{organization_name,description,email,address,phone}=req.body;
+
+    db.query(
+        " SELECT * FROM organizations WHERE organization_name=? OR email=?",[organization_name,email],
+         (err,result)=>{
+        if(err){
+              return res.status(500).json({
+                message:err.message
+                });
+
+            }
+          if(result.length>0)
+          {
+            return res.status(409).json({
+                message:"Organization Already exists "
+            });
+          }
+  
   db.query("INSERT INTO organizations(organization_name,description,email,address,phone)values(?,?,?,?,?)",
     [organization_name,description,email,address,phone],
     (err,result)=>{
@@ -12,12 +29,15 @@
                 });
 
             }
-            return res.status(201).json({
-                message:"Organization Created successfully"
+        
+    
+               return res.status(201).json({
+            message: "Organization Created successfully"
         });
-    }
-  );
- };
+    });
+  }
+);
+};
 
  exports.getAllOrganizations=(req,res)=>{
     db.query(
@@ -56,7 +76,7 @@
  exports.deleteOrganization=(req,res)=>{
     const {id}=req.params;
 
-    db.query("DELETE FROM organizations WHERE organization                                                       _id=?",[id],
+    db.query("DELETE FROM organizations WHERE organization_id=?",[id],
         (err,result)=>{
             if(err){
                 return res.status(500).json({
