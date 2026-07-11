@@ -81,21 +81,28 @@ exports.updateCategory=(req,res)=>{
  exports.deleteCategory=(req,res)=>{
     const {id}=req.params;
 
-    db.query("DELETE FROM categories WHERE category_id=?",[id],
+    db.query(
+        "DELETE FROM categories WHERE category_id=?",
+        [id],
         (err,result)=>{
+
             if(err){
+                console.log("DELETE ERROR:",err);
                 return res.status(500).json({
                     message:err.message
                 });
             }
-               if(result.affectedRows===0){
+
+            if(result.affectedRows===0){
                 return res.status(404).json({
                     message:"Category Not Found"
                 });
             }
+
             return res.status(200).json({
                 message:"Category Deleted Successfully"
             });
 
-    });
- }
+        }
+    );
+};

@@ -3,10 +3,10 @@
  
  const teacherController =require("../controllers/teacherController");
  const{verifyToken} = require("../middleware/authMiddleware");
- 
+ const{ teacherValidation }= require("../middleware/teacherValidation");
    router.post("/",
        verifyToken,
-       
+       teacherValidation,
        teacherController.createTeacher
    );
    
@@ -16,7 +16,7 @@
    router.put(
        "/:id",
        verifyToken,
-    
+           teacherValidation,
      teacherController.updateTeacher
    );
    

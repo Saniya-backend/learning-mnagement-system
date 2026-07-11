@@ -2,10 +2,19 @@
 {
     const{organization_name,description,email,phone,address}=req.body;
 
-    if(!organization_name||!description||!email||!phone||!address){
+    const missingFields = [];
+
+    if (!organization_name) missingFields.push("course_name");
+    if (!description) missingFields.push("description");
+    if (!email) missingFields.push("email");
+    if (!phone) missingFields.push("phone");
+    if (!address) missingFields.push("address");
+
+    if (missingFields.length > 0) {
         return res.status(400).json({
-            message:"All fields are required(name,email,description,phone,address)"
+            message: `${missingFields.join(", ")} fields are required`
         });
     }
+
     next();
 };

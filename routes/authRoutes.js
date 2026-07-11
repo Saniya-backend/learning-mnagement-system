@@ -35,7 +35,7 @@ router.get("/test",verifyToken,(req,res)=>
     res.status(200).json(
         {
             message:"Protected Route working",
-            user:req.user
+            user:req.usern
         }
     );
 })

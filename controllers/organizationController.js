@@ -55,7 +55,7 @@
  {
     const{id}=req.params;
 
-    db.query("SELECT * FROM organizations where organization_id=?",
+    db.query("SELECT * FROM organizations where organizations_id=?",
         [id],
         (err,result)=>
         {
@@ -73,10 +73,37 @@
         }
     )
  }
+
+ 
+exports.updateOrganization=(req,res)=>{
+    const{id}=req.params;
+    const{organization_name,email,description,phone,address}=req.body;
+
+    db.query("UPDATE organizations SET organization_name=?,email=? ,description=?,phone=?,address=? WHERE organizations_id=?",
+        [organization_name,email,description,phone,address,id],
+        (err,result)=>
+        {
+            if(err){
+                return res.status(500).json({
+                    message:err.message
+                });
+            }
+            if(result.affectedRows===0){
+                return res.status(404).json({
+                    message:"Organization Not Found"
+                });
+            }
+            return res.status(200).json({
+                message:"Organizations updated Successfully"
+            });
+
+        }
+    );
+};
  exports.deleteOrganization=(req,res)=>{
     const {id}=req.params;
 
-    db.query("DELETE FROM organizations WHERE organization_id=?",[id],
+    db.query("DELETE FROM organizations WHERE organizations_id=?",[id],
         (err,result)=>{
             if(err){
                 return res.status(500).json({

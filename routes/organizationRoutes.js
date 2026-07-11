@@ -15,7 +15,12 @@ router.get("/",verifyToken, organizationController.getAllOrganizations);
 
 router.get("/:id",verifyToken,organizationController.getOrganizationById);
 
-
+router.put(
+      "/:id",
+      verifyToken,
+      organizationValidation,
+      organizationController.updateOrganization
+  );
 router.delete("/:id",verifyToken,organizationController.deleteOrganization);
 
 module.exports=router;   

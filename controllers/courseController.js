@@ -3,7 +3,23 @@
 exports.createCourse=(req,res)=>
 {
     const{course_name,description,price,category_id,teacher_id}=req.body;
+    
+      db.query(
+        " SELECT * FROM courses WHERE course_name=? AND category_id=? AND teacher_id=? ",[course_name,category_id,teacher_id],
+         (err,result)=>{
+        if(err){
+              return res.status(500).json({
+                message:err.message
+                });
 
+            }
+          if(result.length>0)
+          {
+            return res.status(409).json({
+                message:" This Course is Already exists in same category "
+            });
+          }
+  
     db.query("INSERT INTO courses(course_name,description,price,category_id,teacher_id) VALUES(?,?,?,?,?)",[course_name,description,price,category_id,teacher_id],
         (err,result)=>{
             if(err){
@@ -16,8 +32,11 @@ exports.createCourse=(req,res)=>
                 message:"Course Created Successfully"
             });
         }
-    )
-};
+    );
+}
+      );
+    };
+
 
 exports.getAllCourses=(req,res)=>
 {
@@ -36,7 +55,7 @@ exports.getAllCourses=(req,res)=>
     exports.getCourseById=(req,res)=>
 {
     const{id}=req.params;
-    db.query("select * FROM courses here course_id=?",
+    db.query("select * FROM courses where course_id=?",
         [id],
         (err,result)=>{
             if(err){
@@ -44,9 +63,9 @@ exports.getAllCourses=(req,res)=>
                     message:err.message
                 });
             }
-            return res.status(201).json
+            return res.status(201).json(result);
 
-            (result);
+    
         }
     );
 };
@@ -79,7 +98,7 @@ exports.updateCourse=(req,res)=>{
  exports.deleteCourse=(req,res)=>{
     const {id}=req.params;
 
-    db.query("DELETE FROM courses WHERE courses_id=?",[id],
+    db.query("DELETE FROM courses WHERE course_id=?",[id],
         (err,result)=>{
             if(err){
                 return res.status(500).json({

@@ -7,16 +7,21 @@ exports.signupValidation = (req, res, next) => {
     })
   }
 
-  if (!name || !email || !password) {
-    return res.status(400).json({
-      message: "All fields required",
-    });
+   const missingFields = [];
 
+    if (!name) missingFields.push("name");
+    if (!email) missingFields.push("email");
+    if (!password) missingFields.push("password");
+  
+    if (missingFields.length > 0) {
+        return res.status(400).json({
+            message: `${missingFields.join(", ")} fields are required`
+        });
+    }
 
-    
-  }
+  
 next();
-};
+}
 
 exports.loginValidation=(req,res,next)=>{
     

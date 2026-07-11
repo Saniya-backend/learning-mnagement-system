@@ -1,9 +1,9 @@
 const db=require("../config/db");
 exports.createTeacher=(req,res)=>{
     const{
-        organization_id,user_id,specialization,qualification,experience,bio
+        organizations_id,user_id,specialization,qualification,experience,bio
     }=req.body;
-    db.query("insert into teachers(organization_id,user_id,specialization,qualification,experience,bio) Value(?,?,?,?,?,?)",[organization_id,user_id,specialization,qualification,experience,bio],
+    db.query("insert into teachers(organizations_id,user_id,specialization,qualification,experience,bio) Value(?,?,?,?,?,?)",[organizations_id,user_id,specialization,qualification,experience,bio],
         (err,result)=>{
          if(err) {
             return res.status(500).json({
@@ -17,19 +17,30 @@ exports.createTeacher=(req,res)=>{
     );
 
 };
+exports.getAllTeachers=(req,res)=>{
 
- exports.getAllTeachers=(req,res)=>{
     db.query(
-        "SELECT * FROM teachers",(err,result)=>{
+        `
+        SELECT 
+        teachers.teacher_id,
+        users.name AS teacher_name
+        FROM teachers
+        JOIN users 
+        ON teachers.user_id = users.user_id
+        `,
+        (err,result)=>{
+
             if(err){
                 return res.status(500).json({
                     message:err.message
                 });
             }
-            return res.status(200).json(result)
+
+            return res.status(200).json(result);
         }
     );
- }
+
+};
  exports.getTeacherById=(req,res)=>
  {
     const{id}=req.params;
@@ -55,9 +66,9 @@ exports.createTeacher=(req,res)=>{
   exports.updateTeacher=(req,res)=>{
      const {id}=req.params;
       const{
-        organization_id,user_id,specialization,qualification,experience,bio
+        organizations_id,user_id,specialization,qualification,experience,bio
     }=req.body;
-     db.query("UPDATE teachers set organization_id=?,user_id=?,specialization=?,qualification=?,experience=?,bio=? Where teacher_id=?",[organization_id,user_id,specialization,qualification,experience,bio,id],
+     db.query("UPDATE teachers set organizations_id=?,user_id=?,specialization=?,qualification=?,experience=?,bio=? Where teacher_id=?",[organizations_id,user_id,specialization,qualification,experience,bio,id],
         (err,result)=>
         {
             if(err){
@@ -67,11 +78,11 @@ exports.createTeacher=(req,res)=>{
             }
             if(result.affectedRows===0){
                 return res.status(404).json({
-                    message:"Course Not Found"
+                    message:"Teacher Not Found"
                 });
             }
             return res.status(200).json({
-                message:"Course updated Successfully"
+                message:"Teacher updated Successfully"
             });
 
         }
