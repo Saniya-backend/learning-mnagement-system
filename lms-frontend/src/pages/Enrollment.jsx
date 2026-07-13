@@ -2,70 +2,56 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 
 function Enrollment() {
+  const [courses, setCourses] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
 
-  const [form, setForm] = useState({
-    course_id: "",
-    user_id: "",
-  });
+  // Get Courses
+  const getCourses = async () => {
+    try {
+      const res = await api.get("/course");
+      setCourses(res.data);
+    } catch (err) {
+      console.log(err.response?.data || err.message);
+    }
+  };
 
-  // GET
+  // Get Enrollments
   const getEnrollments = async () => {
     try {
       const res = await api.get("/enrollment");
       setEnrollments(res.data);
     } catch (err) {
-      console.error(err);
+      console.log(err.response?.data || err.message);
     }
   };
 
   useEffect(() => {
+    getCourses();
     getEnrollments();
   }, []);
 
-  // CREATE
-  const enroll = async (e) => {
-    e.preventDefault();
-
+  // Enroll
+  const enroll = async (courseId) => {
     try {
-      console.log("Sending Data:", form);
-
-      const res = await api.post("/enrollment", form);
-
-      console.log("Success:", res.data);
-
-      alert("Enrollment Done");
-
-      setForm({
-        course_id: "",
-        user_id: "",
+      await api.post("/enrollment", {
+        course_id: courseId,
       });
 
+      alert("Enrolled Successfully");
       getEnrollments();
     } catch (err) {
-      console.error("Enrollment Error:", err);
-
-      if (err.response) {
-        console.log("Status:", err.response.status);
-        console.log("Response:", err.response.data);
-
-        alert(
-          err.response.data.message ||
-            JSON.stringify(err.response.data)
-        );
-      } else {
-        alert("Server Error");
-      }
+      alert(err.response?.data?.message || "Enrollment Failed");
     }
   };
 
-  // DELETE
+  // Delete Enrollment
   const remove = async (id) => {
     try {
       await api.delete(`/enrollment/${id}`);
+      alert("Enrollment Deleted");
       getEnrollments();
     } catch (err) {
-      console.error(err);
+      alert(err.response?.data?.message || "Delete Failed");
     }
   };
 
@@ -73,46 +59,50 @@ function Enrollment() {
     <div className="p-8">
       <h1 className="text-3xl font-bold">Enrollment</h1>
 
-      <form onSubmit={enroll} className="grid gap-3 mt-5">
-        <input
-          className="border p-2"
-          placeholder="Course ID"
-          value={form.course_id}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              course_id: e.target.value,
-            })
-          }
-        />
+      {/* Course Cards */}
+      <div className="grid grid-cols-3 gap-5 mt-5">
+        {courses.map((course) => (
+          <div
+            key={course.course_id}
+            className="border rounded-lg shadow p-4"
+          >
+            <h2 className="text-xl font-bold">
+              {course.course_name}
+            </h2>
 
-        <input
-          className="border p-2"
-          placeholder="User ID"
-          value={form.user_id}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              user_id: e.target.value,
-            })
-          }
-        />
+            <p>{course.description}</p>
 
-        <button
-          type="submit"
-          className="bg-green-600 text-white p-2"
-        >
-          Enroll
-        </button>
-      </form>
+            <p>
+              <b>Price:</b> ₹{course.price}
+            </p>
 
-      <table className="border w-full mt-5">
+            <p>
+              <b>Category:</b> {course.category_name}
+            </p>
+
+            <p>
+              <b>Teacher:</b> {course.teacher_name}
+            </p>
+
+            <button
+              className="bg-green-600 text-white px-4 py-2 rounded mt-3"
+              onClick={() => enroll(course.course_id)}
+            >
+              Enroll
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Enrollment Table */}
+      <table className="w-full border-collapse border mt-8">
         <thead>
           <tr>
-            <th className="border">ID</th>
-            <th className="border">Course ID</th>
-            <th className="border">User ID</th>
-            <th className="border">Action</th>
+            <th className="border p-2">Enrollment ID</th>
+            <th className="border p-2">User</th>
+            <th className="border p-2">Course</th>
+            <th className="border p-2">Enrolled At</th>
+            <th className="border p-2">Action</th>
           </tr>
         </thead>
 
@@ -120,12 +110,14 @@ function Enrollment() {
           {enrollments.map((item) => (
             <tr key={item.enrollment_id}>
               <td className="border p-2">{item.enrollment_id}</td>
-              <td className="border p-2">{item.course_id}</td>
-              <td className="border p-2">{item.user_id}</td>
+              <td className="border p-2">{item.user_name}</td>
+              <td className="border p-2">{item.course_name}</td>
+              <td className="border p-2">{item.enrolled_at}</td>
+
               <td className="border p-2">
                 <button
                   onClick={() => remove(item.enrollment_id)}
-                  className="bg-red-600 text-white px-3 py-1"
+                  className="bg-red-600 text-white px-3 py-1 rounded"
                 >
                   Delete
                 </button>
