@@ -1,12 +1,8 @@
 const db=require("../config/db");
 
-
-
-
 exports.createEnrollment=(req,res)=>{
-
-
-const user_id = req.user.user_id;
+        console.log(req.user);
+const user_id = req.user.id;
 
 const {course_id}=req.body;
 
@@ -87,39 +83,37 @@ message:"Enrolled Successfully"
 
 };
 
+exports.getAllEnrollments = (req, res) => {
+  const sql = `
+    SELECT 
+      e.enrollment_id,
+      u.name AS student_name,
+      u.email AS student_email,
+      c.course_name,
+      tuser.name AS teacher_name,
+      e.enrolled_at
+    FROM enrollments e
+    JOIN users u
+      ON e.user_id = u.user_id
+    JOIN courses c
+      ON e.course_id = c.course_id
+    LEFT JOIN teachers t
+      ON c.teacher_id = t.teacher_id
+    LEFT JOIN users tuser
+      ON t.user_id = tuser.user_id
+    ORDER BY e.enrolled_at DESC
+  `;
 
-exports.getAllEnrollments=(req,res)=>{
+  db.query(sql, (err, result) => {
+    if (err) {
+      return res.status(500).json({
+        message: err.message
+      });
+    }
 
-
-db.query(
-
-"SELECT * FROM enrollments",
-
-(err,result)=>{
-
-
-if(err){
-
-return res.status(500).json({
-
-message:err.message
-
-});
-
-}
-
-
-return res.status(200).json(result);
-
-
-}
-
-
-);
-
-
+    return res.status(200).json(result);
+  });
 };
-
 
 exports.getEnrollmentById=(req,res)=>{
 

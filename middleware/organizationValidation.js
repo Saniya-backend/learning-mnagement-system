@@ -4,7 +4,7 @@
 
     const missingFields = [];
 
-    if (!organization_name) missingFields.push("course_name");
+    if (!organization_name) missingFields.push("organization_name");
     if (!description) missingFields.push("description");
     if (!email) missingFields.push("email");
     if (!phone) missingFields.push("phone");

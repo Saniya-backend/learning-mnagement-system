@@ -1,5 +1,5 @@
-import {Link} from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import Logout from "./Logout";
 
 function AdminSidebar(){
 
@@ -13,35 +13,56 @@ Admin Panel
 </h2>
 
 
-<Link className="block mb-3" to="/admin">
+<Link 
+className="block mb-3" 
+to="/admin">
 Dashboard
 </Link>
 
 
-<Link className="block mb-3" to="/organization">
+<Link 
+className="block mb-3" 
+to="/admin/organization">
 Organization
 </Link>
 
 
-<Link className="block mb-3" to="/teacher">
+<Link 
+className="block mb-3" 
+to="/admin/teachers">
 Teacher
 </Link>
 
 
-<Link className="block mb-3" to="/category">
+<Link 
+className="block mb-3" 
+to="/admin/category">
 Category
 </Link>
 
 
-<Link className="block mb-3" to="/course">
+<Link 
+className="block mb-3" 
+to="/admin/courses">
 Course
 </Link>
 
 
-<Link className="block mb-3" to="/enrollment">
+<Link 
+className="block mb-3" 
+to="/admin/enrollments">
 Enrollment
 </Link>
 
+
+<Link 
+className="block mb-3" 
+to="/profile">
+Profile
+</Link>
+
+
+<Logout/>
 
 </div>
 

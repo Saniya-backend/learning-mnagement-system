@@ -3,19 +3,19 @@ const router = express.Router();
 
 const enrollmentController =require("../controllers/enrollmentController");
 const{verifyToken} = require("../middleware/authMiddleware");
-const{ enrollmentValidation }= require("../middleware/enrollmentValidation");
+const { authorizeRoles } = require("../middleware/roleMiddleware");
 
 router.post("/",
     verifyToken,
-    enrollmentValidation,
+  
     enrollmentController.createEnrollment
 );
 
-router.get("/",verifyToken, enrollmentController.getAllEnrollments);
+router.get("/",verifyToken, authorizeRoles("admin"),enrollmentController.getAllEnrollments);
 
-router.get("/:id",verifyToken,enrollmentController.getEnrollmentById);
+router.get("/:id", authorizeRoles("admin"),verifyToken,enrollmentController.getEnrollmentById);
 
 
-router.delete("/:id",verifyToken,enrollmentController.deleteEnrollments);
+router.delete("/:id",verifyToken,authorizeRoles("admin"),enrollmentController.deleteEnrollments);
 
 module.exports=router;

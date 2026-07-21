@@ -5,7 +5,7 @@ function Course() {
   const [courses, setCourses] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [categories, setCategories] = useState([]);
-
+const [user, setUser] = useState({});
   const [editId, setEditId] = useState(null);
 
   const [form, setForm] = useState({
@@ -16,12 +16,14 @@ function Course() {
     teacher_id: "",
   });
 
-  useEffect(() => {
-    getCourses();
-    getTeachers();
-    getCategories();
-  }, []);
+useEffect(() => {
+  getCourses();
+  getTeachers();
+  getCategories();
 
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
+  setUser(loggedUser || {});
+}, []);
   // ---------------- GET COURSES ----------------
 
   const getCourses = async () => {
@@ -173,20 +175,26 @@ function Course() {
           ))}
         </select>
 
-        <select
-          name="teacher_id"
-          value={form.teacher_id}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        >
-          <option value="">Select Teacher</option>
+    {user.role === "admin" && (
+  <select
+    name="teacher_id"
+    value={form.teacher_id}
+    onChange={handleChange}
+    className="border p-2 rounded"
+  >
+    <option value="">Select Teacher</option>
 
-          {teachers.map((teacher) => (
-            <option key={teacher.teacher_id} value={teacher.teacher_id}>
-              {teacher.teacher_name}
-            </option>
-          ))}
-        </select>
+    {teachers.map((teacher) => (
+      <option 
+        key={teacher.teacher_id} 
+        value={teacher.teacher_id}
+      >
+        {teacher.teacher_name}
+      </option>
+    ))}
+
+  </select>
+)}
 
         <button className="bg-blue-600 text-white p-2 rounded">
           {editId ? "Update Course" : "Create Course"}

@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 
-
+import Logout from "./Logout";
 function StudentSidebar(){
 
 
@@ -59,7 +59,7 @@ to="/profile">
 Profile
 
 </Link>
-
+<Logout/>
 
 </div>
 

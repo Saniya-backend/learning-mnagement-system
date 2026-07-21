@@ -95,9 +95,9 @@ getCategories();
 
 
 }
-catch(err){
+catch (err) {
+  alert(err.response?.data?.message || "Something went wrong");
 
-console.log(err);
 
 }
 

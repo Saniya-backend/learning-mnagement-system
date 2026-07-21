@@ -3,6 +3,23 @@ const db=require("../config/db");
 exports.createCategory=(req,res)=>
 {
     const{category_name,description}=req.body;
+
+         db.query(
+        " SELECT * FROM categories WHERE category_name=? ",[category_name],
+         (err,result)=>{
+        if(err){
+              return res.status(500).json({
+                message:err.message
+                });
+
+            }
+          if(result.length>0)
+          {
+            return res.status(409).json({
+                message:"Category Already exists "
+            });
+          }
+
     db.query("INSERT INTO categories(category_name,description)VALUES(?,?)",[category_name,description],
         (err,result)=>{
             if(err){
@@ -14,9 +31,10 @@ exports.createCategory=(req,res)=>
             return res.status(201).json({
                 message:"Category Created Successfully"
             });
-        }
-    );
-}; 
+        });
+  }
+);
+};
 exports.getAllCategories=(req,res)=>{
     db.query(
         "SELECT * from categories ",(err,result)=>{

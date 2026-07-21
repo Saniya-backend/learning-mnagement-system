@@ -13,8 +13,15 @@ exports.courseValidation = (req, res, next) => {
     if (!description) missingFields.push("description");
     if (price == null) missingFields.push("price");
     if (!category_id) missingFields.push("category_id");
-    if (!teacher_id) missingFields.push("teacher_id");
+   if(req.user.role==="admin"){
 
+if(!teacher_id){
+ return res.status(400).json({
+ message:"teacher_id required for admin"
+ });
+}
+
+}
     if (missingFields.length > 0) {
         return res.status(400).json({
             message: `${missingFields.join(", ")} fields are required`

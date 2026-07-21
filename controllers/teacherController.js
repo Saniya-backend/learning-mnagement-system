@@ -3,6 +3,26 @@ exports.createTeacher=(req,res)=>{
     const{
         organizations_id,user_id,specialization,qualification,experience,bio
     }=req.body;
+       
+    
+       db.query(
+    "SELECT * FROM teachers WHERE user_id = ? AND organizations_id = ?",
+    [user_id, organizations_id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          message: err.message,
+        });
+      }
+
+    
+      if (result.length > 0) {
+        return res.status(409).json({
+          message: "Teacher already exists in this organization",
+        });
+      }
+
+
     db.query("insert into teachers(organizations_id,user_id,specialization,qualification,experience,bio) Value(?,?,?,?,?,?)",[organizations_id,user_id,specialization,qualification,experience,bio],
         (err,result)=>{
          if(err) {
@@ -15,30 +35,50 @@ exports.createTeacher=(req,res)=>{
             });
         }
     );
-
+    }
+);
 };
-exports.getAllTeachers=(req,res)=>{
+exports.getAllTeachers = (req,res)=>{
 
     db.query(
-        `
-        SELECT 
-        teachers.teacher_id,
-        users.name AS teacher_name
-        FROM teachers
-        JOIN users 
-        ON teachers.user_id = users.user_id
-        `,
-        (err,result)=>{
+`
+SELECT 
+teachers.teacher_id,
+teachers.user_id,
+teachers.organizations_id,
+teachers.specialization,
+teachers.qualification,
+teachers.experience,
+teachers.bio,
 
-            if(err){
-                return res.status(500).json({
-                    message:err.message
-                });
-            }
+users.name AS teacher_name,
 
-            return res.status(200).json(result);
-        }
-    );
+organizations.organization_name
+
+FROM teachers
+
+JOIN users
+ON teachers.user_id = users.user_id
+
+JOIN organizations
+ON teachers.organizations_id = organizations.organizations_id
+
+`,
+(err,result)=>{
+
+
+if(err){
+
+return res.status(500).json(err);
+
+}
+
+
+res.json(result);
+
+
+});
+
 
 };
  exports.getTeacherById=(req,res)=>

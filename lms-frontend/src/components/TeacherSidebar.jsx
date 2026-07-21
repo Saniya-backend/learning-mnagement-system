@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-
+import Logout from "./Logout";
 
 function TeacherSidebar(){
 
@@ -23,13 +23,6 @@ Dashboard
 
 
 
-<Link 
-className="block mb-4"
-to="/organization">
-
-Organization
-
-</Link>
 
 
 
@@ -60,7 +53,7 @@ to="/profile">
 Profile
 
 </Link>
-
+<Logout/>
 
 
 </div>

@@ -8,6 +8,7 @@ Route
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
+import AdminEnrollment from "./pages/AdminEnrollment";
 
 import AdminDashboard from "./pages/AdminDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
@@ -70,19 +71,62 @@ element={<Signup/>}
 
 
 <Route
-
 path="/admin"
-
 element={
-
-<ProtectedRoute role="admin">
-
+<ProtectedRoute roles={["admin"]}>
 <AdminDashboard/>
-
 </ProtectedRoute>
-
 }
+/>
+{/* Admin Modules */}
 
+<Route
+path="/admin/organization"
+element={
+<ProtectedRoute roles={["admin"]}>
+<Organization/>
+</ProtectedRoute>
+}
+/>
+
+
+<Route
+path="/admin/teachers"
+element={
+<ProtectedRoute roles={["admin"]}>
+<Teacher/>
+</ProtectedRoute>
+}
+/>
+
+
+<Route
+path="/admin/category"
+element={
+<ProtectedRoute roles={["admin","teacher"]}>
+<Category/>
+</ProtectedRoute>
+}
+/>
+
+
+<Route
+path="/admin/courses"
+element={
+<ProtectedRoute roles={["admin","teacher"]}>
+<Course/>
+</ProtectedRoute>
+}
+/>
+
+
+<Route
+  path="/admin/enrollments"
+  element={
+    <ProtectedRoute role="admin">
+      <AdminEnrollment />
+    </ProtectedRoute>
+  }
 />
 
 <Route
@@ -145,30 +189,22 @@ element={
 
 />
 
-
-
-
-
-
-{/* Teacher Modules */}
-
-
-
 <Route
-
-path="/organization"
-
+path="/admin/organization"
 element={
-
-<ProtectedRoute role="teacher">
-
+<ProtectedRoute roles={["admin"]}>
 <Organization/>
-
 </ProtectedRoute>
-
 }
-
 />
+
+
+
+
+
+
+
+
 
 
 
@@ -179,7 +215,7 @@ path="/category"
 
 element={
 
-<ProtectedRoute role="teacher">
+<ProtectedRoute roles={["admin", "teacher"]}>
 
 <Category/>
 
@@ -198,7 +234,7 @@ path="/course"
 
 element={
 
-<ProtectedRoute role="teacher">
+<ProtectedRoute roles={["admin", "teacher"]}>
 
 <Course/>
 
@@ -277,7 +313,14 @@ path="/change-password"
 element={<ChangePassword/>}
 
 />
-
+<Route
+path="/admin/teachers"
+element={
+<ProtectedRoute roles={["admin"]}>
+<Teacher/>
+</ProtectedRoute>
+}
+/>
 
 
 
@@ -285,10 +328,12 @@ element={<ChangePassword/>}
 </Routes>
 
 
+
 </BrowserRouter>
 
 
 )
+
 
 }
 

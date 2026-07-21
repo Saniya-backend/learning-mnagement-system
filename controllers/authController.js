@@ -2,7 +2,6 @@ const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
 exports.signup = async (req, res) => {
   const { name, email, password, role } = req.body;
 
@@ -12,20 +11,29 @@ exports.signup = async (req, res) => {
       [email],
       async (err, result) => {
         if (err) {
-          return res.status(500).json({ message: err.message });
+          return res.status(500).json({
+            message: err.message,
+          });
         }
+
         if (result.length > 0) {
-          return res.status(400).json({ message: "Email already exists" });
+          return res.status(400).json({
+            message: "Email already exists",
+          });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
         db.query(
           "INSERT INTO users (name,email,password,role) VALUES(?,?,?,?)",
           [name, email, hashedPassword, role],
           (err, result) => {
             if (err) {
-              return res.status(500).json({ message: err.message });
+              return res.status(500).json({
+                message: err.message,
+              });
             }
+
             return res.status(201).json({
               message: "User registered Successfully",
             });
@@ -34,7 +42,9 @@ exports.signup = async (req, res) => {
       }
     );
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
@@ -161,4 +171,25 @@ exports.logout = (req, res) => {
     success: true,
     message: "Logout successful",
   });
+};
+exports.getAllUsers = (req,res)=>{
+
+    db.query(
+        "SELECT user_id,name,email,role FROM users",
+        (err,result)=>{
+
+            if(err){
+
+                return res.status(500).json({
+                    message:err.message
+                });
+
+            }
+
+
+            return res.status(200).json(result);
+
+        }
+    );
+
 };

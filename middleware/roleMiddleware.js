@@ -1,4 +1,4 @@
-exports.authorizeRoles=(...role)=>
+exports.authorizeRoles=(...roles)=>
     {
         return(req,res,next)=>
         {

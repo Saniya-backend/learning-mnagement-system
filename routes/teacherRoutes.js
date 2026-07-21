@@ -4,22 +4,23 @@
  const teacherController =require("../controllers/teacherController");
  const{verifyToken} = require("../middleware/authMiddleware");
  const{ teacherValidation }= require("../middleware/teacherValidation");
+ const { authorizeRoles } = require("../middleware/roleMiddleware");
    router.post("/",
        verifyToken,
-       teacherValidation,
+       teacherValidation,  authorizeRoles("admin"),
        teacherController.createTeacher
    );
    
-   router.get("/",verifyToken,teacherController.getAllTeachers);
+   router.get("/",verifyToken,  authorizeRoles("admin","teacher"),teacherController.getAllTeachers);
    
-  router.get("/:id", verifyToken, teacherController.getTeacherById);
+  router.get("/:id", verifyToken,  authorizeRoles("admin","teacher"), teacherController.getTeacherById);
    router.put(
        "/:id",
-       verifyToken,
+       verifyToken,  authorizeRoles("admin"),
            teacherValidation,
      teacherController.updateTeacher
    );
    
-   router.delete("/:id",verifyToken,teacherController.deleteTeacher);
+   router.delete("/:id",verifyToken,  authorizeRoles("admin"),teacherController.deleteTeacher);
    
    module.exports=router;

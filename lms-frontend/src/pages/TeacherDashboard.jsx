@@ -1,6 +1,6 @@
 import TeacherSidebar from "../components/TeacherSidebar";
 import Navbar from "../components/Navbar";
-
+import Logout from "../components/Logout";
 
 function TeacherDashboard(){
 
@@ -34,9 +34,7 @@ Teacher Dashboard
 
 <div className="shadow p-5 rounded">
 
-<h2 className="text-xl">
-Organizations
-</h2>
+
 
 <p className="text-3xl font-bold">
 5

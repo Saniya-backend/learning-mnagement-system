@@ -1,6 +1,6 @@
 import StudentSidebar from "../components/StudentSidebar";
 import Navbar from "../components/Navbar";
-
+import Logout from "../components/Logout";
 
 function StudentDashboard(){
 

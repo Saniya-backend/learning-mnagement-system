@@ -45,8 +45,7 @@ function Organization() {
       });
 
       getOrganizations();
-    } catch (err) {
-      console.log(err);
+    } catch (err) {    alert(err.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -71,8 +70,8 @@ function Organization() {
 
       getOrganizations();
     } catch (err) {
-      console.log(err);
-    }
+  alert(err.response?.data?.message || "Something went wrong");
+}
   };
 
   // Delete

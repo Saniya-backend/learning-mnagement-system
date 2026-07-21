@@ -28,7 +28,7 @@ router.put(
 );
 router.post("/logout", verifyToken, authController.logout);
 
-
+router.get("/users",authController.getAllUsers);
 
 router.get("/test",verifyToken,(req,res)=>
 {
