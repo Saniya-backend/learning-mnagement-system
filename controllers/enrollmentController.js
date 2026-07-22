@@ -113,7 +113,7 @@ exports.getAllEnrollments = (req, res) => {
 
     return res.status(200).json(result);
   });
-};
+};  
 
 exports.getEnrollmentById=(req,res)=>{
 

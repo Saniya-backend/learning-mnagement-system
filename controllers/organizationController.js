@@ -5,7 +5,7 @@
     const{organization_name,description,email,address,phone}=req.body;
 
     db.query(
-        " SELECT * FROM courses WHERE organization_name=? OR email=?",[organization_name,email],
+        " SELECT * FROM organizations WHERE organization_name=? OR email=?",[organization_name,email],
          (err,result)=>{
         if(err){
               return res.status(500).json({

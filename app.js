@@ -12,6 +12,7 @@ const organizationRoutes = require("./routes/organizationRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const playlistRoutes = require("./routes/playlistRoutes");
 const videoRoutes = require("./routes/videoRoutes");
+const progressRoutes = require("./routes/progressRoutes");
 const app = express();
  require("./config/db");
 
@@ -29,6 +30,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/playlist", playlistRoutes);
 app.use("/api/video", videoRoutes);
+app.use("/api/progress", progressRoutes);
 app.get("/", (req, res) => {
     res.send("LMS backend running");
 });
