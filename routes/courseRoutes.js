@@ -9,7 +9,7 @@
       courseValidation,authorizeRoles("admin", "teacher"),
       courseController.createCourse
   );
-  
+   
   router.get("/",verifyToken,    authorizeRoles("admin", "teacher","user"),courseController.getAllCourses);
   
  router.get("/:id",authorizeRoles("admin", "teacher","user"), verifyToken, courseController.getCourseById);

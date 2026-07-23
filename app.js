@@ -1,7 +1,22 @@
 require("dotenv").config();
-
+require("./config/db");
 const express = require("express");
 const cors = require("cors");
+const required = [
+  "DB_HOST",
+  "DB_USER",
+  "DB_PASSWORD",
+  "DB_NAME",
+  "JWT_SECRET"
+];
+
+required.forEach((key) => {
+  if (!process.env[key]) {
+    console.error(`${key} missing`);
+    process.exit(1);
+  }
+});
+const planRoutes = require("./routes/planRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes= require("./routes/dashboardRoutes");
@@ -14,7 +29,7 @@ const playlistRoutes = require("./routes/playlistRoutes");
 const videoRoutes = require("./routes/videoRoutes");
 const progressRoutes = require("./routes/progressRoutes");
 const app = express();
- require("./config/db");
+
 
 
 app.use(cors());
@@ -31,6 +46,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/playlist", playlistRoutes);
 app.use("/api/video", videoRoutes);
 app.use("/api/progress", progressRoutes);
+app.use("/api/plans", planRoutes);
 app.get("/", (req, res) => {
     res.send("LMS backend running");
 });
@@ -38,5 +54,11 @@ app.get("/", (req, res) => {
 app.listen(5000,()=>{
      console.log("Server Running");
  });
-
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error"
+  });
+}); 
 module.exports = app;

@@ -11,16 +11,16 @@ router.post("/",
     organizationController.createOrganization
 );
 
-router.get("/",verifyToken,authorizeRoles("admin"), organizationController.getAllOrganizations);
+router.get("/",verifyToken,authorizeRoles("admin","teacher","user"), organizationController.getAllOrganizations);
 
-router.get("/:id",verifyToken,authorizeRoles("admin"),organizationController.getOrganizationById);
+router.get("/:id",verifyToken,authorizeRoles("admin","teacher","user"),organizationController.getOrganizationById);
 
 router.put(
       "/:id",
       verifyToken,
-      organizationValidation,authorizeRoles("admin"),
+      organizationValidation,authorizeRoles("admin,teacher"),
       organizationController.updateOrganization
   );
-router.delete("/:id",verifyToken,authorizeRoles("admin"),organizationController.deleteOrganization);
+router.delete("/:id",verifyToken,authorizeRoles("admin,teacher"),organizationController.deleteOrganization);
 
 module.exports=router;   

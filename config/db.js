@@ -7,11 +7,11 @@ const db =mysql.createConnection({
     database:process.env.DB_NAME
 });
 
-db.connect((err)=>{
-    if(err){
-        console.log(err);
-    }else{
-        console.log('DATABASE CONNECTED');
-    }
+db.connect((err) => {
+  if (err) {
+    console.error("Database connection failed:", err);
+    process.exit(1);
+  }
+  console.log("Database connected");
 });
 module.exports=db;
