@@ -1,9 +1,13 @@
 const db = require("../config/db");
 
 exports.createPlan = (req, res) => {
-       console.log(req.body);
+    
     const { name, duration_months, price, description, status } = req.body;
-       
+           if(duration_months < 1 || duration_months > 12){
+        return res.status(400).json({
+            message:"Plan duration must be between 1 and 12 months"
+        });
+    }
     db.query(
         "SELECT * FROM plans WHERE name=?",
         [name],

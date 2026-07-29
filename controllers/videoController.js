@@ -14,7 +14,8 @@ exports.createVideo = (req, res) => {
 
 
     const insertVideos= () => {
-
+           
+    
         db.query(
             `INSERT INTO videos 
             (playlist_id, title, description, video_url,duration,order_no,created_by )
@@ -69,14 +70,39 @@ AND t.user_id=?
                 }
 
 
-                if (result.length === 0) {
-                    return res.status(403).json({
-                        message: "You cannot add video on this playlist"
-                    });
-                }
+             if (result.length === 0) {
+    return res.status(403).json({
+        message: "You cannot add video on this playlist"
+    });
+}
 
 
-                insertVideos();
+db.query(
+    "SELECT * FROM videos WHERE playlist_id=? AND video_url=?",
+    [
+        playlist_id,
+        video_url
+    ],
+    (err, videoResult) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: err.message
+            });
+        }
+
+
+        if (videoResult.length > 0) {
+            return res.status(409).json({
+                message: "This video already exists in this playlist"
+            });
+        }
+
+
+        insertVideos();
+
+    }
+);
 
             }
         );
@@ -117,11 +143,10 @@ exports.getAllVideos= (req, res) => {
 exports.getVideoByPlaylist = (req, res) => {
 
     const { playlist_id } = req.params;
-
-    db.query(
-        "SELECT * FROM videos  WHERE playlist_id=? ORDER BY order_no ASC",
+          db.query(
+        "SELECT * FROM playlists WHERE playlist_id=?",
         [playlist_id],
-        (err, result) => {
+        (err, playlistResult) => {
 
             if (err) {
                 return res.status(500).json({
@@ -129,11 +154,41 @@ exports.getVideoByPlaylist = (req, res) => {
                 });
             }
 
-            return res.status(200).json(result);
+
+            if (playlistResult.length === 0) {
+                return res.status(404).json({
+                    message: "playlist Not Found"
+                });
+            }
+    db.query(
+        "SELECT * FROM videos  WHERE playlist_id=? ORDER BY order_no ASC",
+        [playlist_id],
+        (err, videoresult) => {
+
+            if (err) {
+                return res.status(500).json({
+                    message: err.message
+                });
+            }
+
+           if (videoresult.length === 0) {
+                        return res.status(404).json({
+                            message: "No video Found For This Playlist"
+                        });
+                    }
+
+
+                    return res.status(200).json(videoresult);
+
+             
+                }
+            );
+
         }
     );
-};
 
+};
+    
 exports.updateVideo= (req, res) => {
 
     const { id } = req.params;

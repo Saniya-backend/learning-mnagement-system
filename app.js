@@ -29,6 +29,7 @@ const playlistRoutes = require("./routes/playlistRoutes");
 const videoRoutes = require("./routes/videoRoutes");
 const progressRoutes = require("./routes/progressRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const subscriptionRoutes = require("./routes/subscriptionRoutes");
 const app = express();
 
 
@@ -49,6 +50,7 @@ app.use("/api/video", videoRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/plans", planRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/subscription", subscriptionRoutes);
 app.get("/", (req, res) => {
     res.send("LMS backend running");
 });

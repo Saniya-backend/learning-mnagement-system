@@ -15,7 +15,7 @@ exports.categoryValidation = (req, res, next) => {
 
      if(!category_name||!description){
         return res.status(400).json({
-            message:"User id and  course id's are required"
+            message:"User name and  descriptions are required"
         });
     }
 

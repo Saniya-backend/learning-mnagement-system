@@ -71,15 +71,39 @@ AND teachers.user_id=?
                         message: "You cannot create playlist for this course"
                     });
                 }
+               db.query(
+    "SELECT * FROM playlists WHERE course_id=? AND order_no=?",
+    [
+        course_id,
+        order_no || 1
+    ],
+    (err, orderResult) => {
 
+        if (err) {
+            return res.status(500).json({
+                message: err.message
+            });
+        }
+
+
+        if (orderResult.length > 0) {
+            return res.status(409).json({
+                message: "This order number already exists for this course"
+            });
+        }
 
                 insertPlaylist();
 
-            }
-        );
+         }
+);
+
+        }
+    );   
 
 
-    } else if (role === "admin") {
+}
+
+    else if (role === "admin") {
 
         insertPlaylist();
 
@@ -114,11 +138,10 @@ exports.getAllPlaylists = (req, res) => {
 exports.getPlaylistByCourse = (req, res) => {
 
     const { course_id } = req.params;
-
-    db.query(
-        "SELECT * FROM playlists WHERE course_id=? ORDER BY order_no ASC",
+          db.query(
+        "SELECT * FROM courses WHERE course_id=?",
         [course_id],
-        (err, result) => {
+        (err, courseResult) => {
 
             if (err) {
                 return res.status(500).json({
@@ -126,10 +149,43 @@ exports.getPlaylistByCourse = (req, res) => {
                 });
             }
 
-            return res.status(200).json(result);
+
+            if (courseResult.length === 0) {
+                return res.status(404).json({
+                    message: "Course Not Found"
+                });
+            }
+        
+      db.query(
+                "SELECT * FROM playlists WHERE course_id=? ORDER BY order_no ASC",
+                [course_id],
+                (err, playlistResult) => {
+
+                    if (err) {
+                        return res.status(500).json({
+                            message: err.message
+                        });
+                    }
+
+
+                    if (playlistResult.length === 0) {
+                        return res.status(404).json({
+                            message: "No Playlist Found For This Course"
+                        });
+                    }
+
+
+                    return res.status(200).json(playlistResult);
+
+             
+                }
+            );
+
         }
     );
+
 };
+    
 
 exports.updatePlaylist = (req, res) => {
 

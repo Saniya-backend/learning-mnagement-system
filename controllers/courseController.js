@@ -27,7 +27,42 @@ exports.createCourse = (req, res) => {
                     message: "Course Already exists"
                 });
             }
+        
+     db.query(
+    "SELECT * FROM categories WHERE category_id=?",
+    [category_id],
+    (err, categoryResult) => {
+
+        if (err) {
+            return res.status(500).json({
+                message: err.message
+            });
+        }
+
+        if (categoryResult.length === 0) {
+            return res.status(404).json({
+                message: "Category Not Found"
+            });
+        }
+
     if (req.user.role === "admin") {
+
+          db.query(
+                "SELECT * FROM teachers WHERE teacher_id=?",
+                [teacher_id],
+                (err, teacherData) => {
+
+                    if (err) {
+                        return res.status(500).json({
+                            message: err.message
+                        });
+                    }
+
+                    if (teacherData.length === 0) {
+                        return res.status(404).json({
+                            message: "Teacher Not Found"
+                        });
+                    }
 
         db.query(
             `INSERT INTO courses
@@ -44,14 +79,15 @@ exports.createCourse = (req, res) => {
 
                 return res.status(201).json({
                     message: "Course Created Successfully"
-                });
+                  });
 
-            }
-        );
+                                    }
+                                );
 
-    }
+                            }
+                        );
 
-    else {
+                    } else {
 
        const user_id = req.user.id;
 
@@ -97,15 +133,22 @@ exports.createCourse = (req, res) => {
                             message: "Course Created Successfully"
                         });
 
+                                    }
+                                );
+
+                            }
+                        );
+
                     }
-                );
 
-            }
-        );
+                }
+            );
 
-    }
-        });
-    };
+        }
+    );
+
+};
+            
 
 exports.getAllCourses = (req,res)=>{
 
@@ -162,6 +205,7 @@ return res.status(200).json(result);
 };
     exports.getCourseById=(req,res)=>
 {
+
     const{id}=req.params;
     db.query("select * FROM courses where course_id=?",
         [id],
@@ -169,6 +213,11 @@ return res.status(200).json(result);
             if(err){
                 return res.status(500).json({
                     message:err.message
+                });
+            }
+                 if(result.length===0){
+                return res.status(404).json({
+                    message:"Course Not Found"
                 });
             }
             return res.status(200).json(result);
@@ -180,7 +229,23 @@ return res.status(200).json(result);
 exports.updateCourse=(req,res)=>{
     const{id}=req.params;
     const{course_name,description,price,category_id,teacher_id}=req.body;
+         db.query(
+    "SELECT * FROM courses WHERE course_name=?  AND  category_id=?  ",
+    [course_name, id],
+    (err, result) => {
 
+        if (err) {
+            return res.status(500).json({
+                message: err.message
+            });
+        }
+
+        if (result.length > 0) {
+            return res.status(409).json({
+                message: "Course name already exists"
+            });
+        }
+         
     db.query("UPDATE courses  SET course_name=?,description=? ,price=?,category_id=?,teacher_id=? WHERE course_id=?",
         [course_name,description,price,category_id,teacher_id,id],
         (err,result)=>
@@ -197,11 +262,16 @@ exports.updateCourse=(req,res)=>{
             }
             return res.status(200).json({
                 message:"Course updated Successfully"
-            });
+           });
+
+                }
+            );
 
         }
     );
+
 };
+
 
  exports.deleteCourse=(req,res)=>{
     const {id}=req.params;

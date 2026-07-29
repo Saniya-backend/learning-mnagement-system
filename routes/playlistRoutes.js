@@ -7,7 +7,7 @@ const { playlistValidation } = require("../middleware/playlistValidation");
 
   router.post("/",
       verifyToken, playlistValidation,  
-      authorizeRoles("admin", "teacher"),
+      authorizeRoles( "teacher"),
     playlistController.createPlaylist
   );
   
@@ -17,10 +17,10 @@ const { playlistValidation } = require("../middleware/playlistValidation");
   router.put(
       "/:id",
       verifyToken,
-      authorizeRoles("admin", "teacher"),
+      authorizeRoles( "teacher"),
       playlistController.updatePlaylist
   );
   
-  router.delete("/:id",verifyToken,authorizeRoles("admin", "teacher"),playlistController.deletePlaylist);
+  router.delete("/:id",verifyToken,authorizeRoles("teacher"),playlistController.deletePlaylist);
   
   module.exports=router;

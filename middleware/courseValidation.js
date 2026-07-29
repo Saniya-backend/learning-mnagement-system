@@ -1,4 +1,5 @@
 exports.courseValidation = (req, res, next) => {
+
     const {
         course_name,
         description,
@@ -7,24 +8,57 @@ exports.courseValidation = (req, res, next) => {
         teacher_id
     } = req.body;
 
-    const missingFields = [];
-
-    if (!course_name) missingFields.push("course_name");
-    if (!description) missingFields.push("description");
-    if (price == null) missingFields.push("price");
-    if (!category_id) missingFields.push("category_id");
-   if(req.user.role==="admin"){
-
-if(!teacher_id){
- return res.status(400).json({
- message:"teacher_id required for admin"
- });
-}
-
-}
-    if (missingFields.length > 0) {
+    if (!course_name || course_name.trim() === "") {
         return res.status(400).json({
-            message: `${missingFields.join(", ")} fields are required`
+            message: "Course name is required"
+        });
+    }
+
+    if (course_name.length > 100) {
+        return res.status(400).json({
+            message: "Course name cannot exceed 100 characters"
+        });
+    }
+
+    if (!description || description.trim() === "") {
+        return res.status(400).json({
+            message: "Description is required"
+        });
+    }
+
+    if (description.length > 1000) {
+        return res.status(400).json({
+            message: "Description cannot exceed 1000 characters"
+        });
+    }
+
+    if (price === undefined || price === null || price === "") {
+        return res.status(400).json({
+            message: "Price is required"
+        });
+    }
+
+    if (isNaN(price)) {
+        return res.status(400).json({
+            message: "Price must be a number"
+        });
+    }
+
+    if (price <= 0 || price > 50000) {
+        return res.status(400).json({
+            message: "Price must be between 1 and 50000"
+        });
+    }
+
+    if (!category_id) {
+        return res.status(400).json({
+            message: "Category is required"
+        });
+    }
+
+    if (req.user.role === "admin" && !teacher_id) {
+        return res.status(400).json({
+            message: "Teacher id is required"
         });
     }
 

@@ -1,42 +1,71 @@
-const db=require("../config/db");
+const db = require("../config/db");
 exports.createTeacher=(req,res)=>{
     const{
         organizations_id,user_id,specialization,qualification,experience,bio
     }=req.body;
-       
-    
-       db.query(
-    "SELECT * FROM teachers WHERE user_id = ? AND organizations_id = ?",
-    [user_id, organizations_id],
-    (err, result) => {
-      if (err) {
-        return res.status(500).json({
-          message: err.message,
-        });
-      }
-
-    
-      if (result.length > 0) {
-        return res.status(409).json({
-          message: "Teacher already exists in this organization",
-        });
-      }
 
 
-    db.query("insert into teachers(organizations_id,user_id,specialization,qualification,experience,bio) Value(?,?,?,?,?,?)",[organizations_id,user_id,specialization,qualification,experience,bio],
-        (err,result)=>{
-         if(err) {
-            return res.status(500).json({
-                message:err.message
-            });
-        }
-            return res.status(201).json({
-                message:"Teacher Created Successflly "
-            });
+    db.query(
+        "SELECT organizations_id FROM organizations WHERE organizations_id = ?",
+        [organizations_id],
+        (err, result) => {
+
+            if(err){
+                return res.status(500).json({
+                    message: err.message
+                });
+            }
+
+            if(result.length === 0){
+                return res.status(400).json({
+                    message:"Organization not found"
+                });
+            }
+            db.query(
+                "SELECT * FROM teachers WHERE user_id = ? AND organizations_id = ?",
+                [user_id, organizations_id],
+                (err,result)=>{
+
+                    if(err){
+                        return res.status(500).json({
+                            message:err.message
+                        });
+                    }
+
+                    if(result.length > 0){
+                        return res.status(409).json({
+                            message:"Teacher already exists in this organization"
+                        });
+                    }
+                    db.query(
+                        "INSERT INTO teachers(organizations_id,user_id,specialization,qualification,experience,bio) VALUES(?,?,?,?,?,?)",
+                        [
+                            organizations_id,
+                            user_id,
+                            specialization,
+                            qualification,
+                            experience,
+                            bio
+                        ],
+                        (err,result)=>{
+
+                            if(err){
+                                return res.status(500).json({
+                                    message:err.message
+                                });
+                            }
+
+                            return res.status(201).json({
+                                message:"Teacher Created Successfully"
+                            });
+                        }
+                    );
+
+                }
+            );
+
         }
     );
-    }
-);
 };
 exports.getAllTeachers = (req,res)=>{
 

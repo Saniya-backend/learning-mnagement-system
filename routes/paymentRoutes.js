@@ -2,18 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const paymentController = require("../controllers/paymentController");
-
-const {verifyToken} = require("../middleware/authMiddleware");
-const {authorizeRoles} = require("../middleware/roleMiddleware");
-
+const { verifyToken } = require("../middleware/authMiddleware");
+const { authorizeRoles } = require("../middleware/roleMiddleware");
 
 
 router.post(
     "/",
-    verifyToken,
+    verifyToken,authorizeRoles("user"),
     paymentController.createPayment
 );
-
 
 
 router.get(
@@ -24,14 +21,11 @@ router.get(
 );
 
 
-
 router.get(
     "/:id",
-    verifyToken,
-    authorizeRoles("admin"),
+    verifyToken, authorizeRoles("admin"),
     paymentController.getPaymentById
 );
-
 
 
 module.exports = router;

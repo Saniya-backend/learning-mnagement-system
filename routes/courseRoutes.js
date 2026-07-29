@@ -6,20 +6,20 @@
   const { authorizeRoles } = require("../middleware/roleMiddleware");
   router.post("/",
       verifyToken,
-      courseValidation,authorizeRoles("admin", "teacher"),
+   authorizeRoles("admin", "teacher"),courseValidation,
       courseController.createCourse
   );
    
-  router.get("/",verifyToken,    authorizeRoles("admin", "teacher","user"),courseController.getAllCourses);
+  router.get("/",verifyToken,authorizeRoles("admin", "teacher","user"),courseController.getAllCourses);
   
- router.get("/:id",authorizeRoles("admin", "teacher","user"), verifyToken, courseController.getCourseById);
+ router.get("/:id", verifyToken, courseController.getCourseById);
   router.put(
       "/:id",
-      verifyToken,
-      courseValidation,    authorizeRoles("admin", "teacher"),
+      verifyToken,authorizeRoles("admin", "teacher"),
+      courseValidation, 
       courseController.updateCourse
   );
   
-  router.delete("/:id",verifyToken,    authorizeRoles("admin", "teacher"),courseController.deleteCourse);
+  router.delete("/:id",verifyToken,authorizeRoles("admin", "teacher"),courseController.deleteCourse);
   
   module.exports=router;
